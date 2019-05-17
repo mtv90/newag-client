@@ -31,8 +31,8 @@ export default class Hello extends React.Component{
     render(){
       return (
         <div className="container hello">
-            <div className="jumbotron shadow">
-                <h1 className="display-3 mb-4 text-center menu-color">Newag Online-Termninbuchung</h1>
+            <div className="jumbotron bg-dark text-white jum">
+                <h1 className="display-3 mb-4 text-center menu-color">Newag Online-Terminbuchung</h1>
             </div>
         </div>
       );

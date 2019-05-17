@@ -43,7 +43,8 @@ export default class Links extends React.Component{
     })
 
     this.setState({isLoading: true});
-    axios.get('http://localhost:8080/patient2/api/patients')
+    // axios.get('http://localhost:8080/patient2/api/patients')
+    axios.get('https://newag-app.herokuapp.com/api/termine')
     .then(res => {
       this.setState({
         patients: res.data,
@@ -140,7 +141,7 @@ export default class Links extends React.Component{
           {this.state.nextPage ? <button value={this.state.nextPage} onClick={this.next}>next</button> : <button disabled>next</button>}
           <ul className="list-group">
             {this.state.patients.map(patient =>
-              <li className="list-group-item" key={patient.id}>{patient.id}, {patient.vorname} / {patient.diagnose}</li>
+              <li className="list-group-item" key={patient.id}>{patient.id}, {patient.name}</li>
             )}
           </ul>
           <ul>

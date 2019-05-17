@@ -13,5 +13,8 @@ body {
   margin-right: auto;
   margin-top: 20vh;
 }
-
+.jum {
+  border-radius: 0;
+  box-shadow: 15px 15px grey;
+}
 
