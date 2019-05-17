@@ -13,8 +13,8 @@ export default class App extends React.Component {
     }
   }
   componentDidMount(){
-    // Axios.get('https://newag-app.herokuapp.com/api/termins')
-    Axios.get('http://localhost:8080/api/getAllPatient')
+    Axios.get('https://newag-app.herokuapp.com/api/termins')
+    // Axios.get('http://localhost:8080/api/getAllPatient')
       .then(res => console.log(res.data))
       .catch(err => console.log(err))
   }
