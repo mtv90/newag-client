@@ -5,7 +5,7 @@ export default class Header extends React.Component{
     render(){
       return (
             <header className="">
-                <nav className="myheader navbar navbar-light bg-light">
+                <nav className="myheader navbar navbar-dark bg-dark">
                     <Link className="navbar-brand" to="/">
                         {/* <img src="" className="img-responsive" alt="logo" height="35" width="50"/> */}
                         <span className="navbar-brand">newag</span></Link>

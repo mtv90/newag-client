@@ -43,19 +43,31 @@ export default class Links extends React.Component{
     })
 
     this.setState({isLoading: true});
-    var client = mkFhir({
-      baseUrl: 'http://hapi.fhir.org/baseDstu3'
-    });
-    client.search({type: 'Patient', query: { 'gender': 'female', 'deceased': 'false', 'active': 'true'}})
-      .then(res => {
-        this.setState({
-          patients: res.data.entry,
-          selfPage: res.data.link[0].url,
-          nextPage: res.data.link[1].url,
-          isLoading: false
-        })
+    axios.get('http://localhost:8080/patient2/api/patients')
+    .then(res => {
+      this.setState({
+        patients: res.data,
+        isLoading: false
       })
-      .catch(err => console.log(err))
+    })
+    .catch(err => {
+      this.setState({
+        error: err
+      })
+    })
+    // var client = mkFhir({
+    //   baseUrl: 'http://hapi.fhir.org/baseDstu3'
+    // });
+    // client.search({type: 'Patient', query: { 'gender': 'female', 'deceased': 'false', 'active': 'true'}})
+    //   .then(res => {
+    //     this.setState({
+    //       patients: res.data.entry,
+    //       selfPage: res.data.link[0].url,
+    //       nextPage: res.data.link[1].url,
+    //       isLoading: false
+    //     })
+    //   })
+    //   .catch(err => console.log(err))
   }
 
   handleChange(event){
@@ -126,9 +138,9 @@ export default class Links extends React.Component{
           {this.state.item !== undefined ? this.state.item : undefined}
           {this.state.prevPage ? <button value={this.state.prevPage} onClick={this.prev}>previous</button> : <button disabled>previous</button>}
           {this.state.nextPage ? <button value={this.state.nextPage} onClick={this.next}>next</button> : <button disabled>next</button>}
-          <ul>
+          <ul className="list-group">
             {this.state.patients.map(patient =>
-              <li key={patient.resource.id}>{patient.resource.id}, {patient.resource.birthDate}</li>
+              <li className="list-group-item" key={patient.id}>{patient.id}, {patient.vorname} / {patient.diagnose}</li>
             )}
           </ul>
           <ul>
