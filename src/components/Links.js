@@ -45,8 +45,8 @@ export default class Links extends React.Component{
     })
 
     this.setState({isLoading: true});
-    axios.get('http://localhost:8080/patient2/api/patients')
-    // axios.get('https://newag-app.herokuapp.com/api/termine')
+    // axios.get('http://localhost:8080/patient2/api/patients')
+    axios.get('https://newag-app.herokuapp.com/api/termine')
     .then(res => {
       this.setState({
         patients: res.data,
