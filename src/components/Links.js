@@ -1,8 +1,10 @@
 import React from 'react';
 
 import axios from 'axios';
-import {Link} from 'react-router-dom';
-import mkFhir from 'fhir.js';
+// import {Link} from 'react-router-dom';
+// import mkFhir from 'fhir.js';
+import $ from 'jquery'; 
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 
 
@@ -43,8 +45,8 @@ export default class Links extends React.Component{
     })
 
     this.setState({isLoading: true});
-    // axios.get('http://localhost:8080/patient2/api/patients')
-    axios.get('https://newag-app.herokuapp.com/api/termine')
+    axios.get('http://localhost:8080/patient2/api/patients')
+    // axios.get('https://newag-app.herokuapp.com/api/termine')
     .then(res => {
       this.setState({
         patients: res.data,
@@ -122,6 +124,32 @@ export default class Links extends React.Component{
       .catch(err => console.log(err))
       
   }
+  onSubmit(e) {
+    e.preventDefault();
+    const vorname =  this.refs.vorname.value.trim();
+    const nachname =  this.refs.nachname.value.trim();
+    const diagnose =  this.refs.diagnose.value.trim();
+    const datum =  this.refs.datum.value.trim();
+
+    // console.log(vorname, nachname, diagnose, datum);
+    axios.post('http://localhost:8080/patient2/api/patients', {
+      vorname,
+      nachname,
+      diagnose,
+      datum
+    })
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+
+    $(document).ready(function(){
+      $('#terminModal').modal({
+        focus: false,
+        show: false
+      })
+    });
+
+    e.preventDefault();
+  }
   render(){
     var Spinner = require('react-spinkit');
     const {isLoading} = this.state;
@@ -132,7 +160,10 @@ export default class Links extends React.Component{
       return (
         <div className="container">
           <h2>FHIR-Patienten</h2>
-          
+         {/* Button zum Auslösen des Modals */}
+          <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#terminModal">
+            Termin erstellen
+          </button>
           {/* <p>{this.state.nextPage}</p>
           <p>{this.state.prevPage}</p> */}
           <input value={this.state.item} onChange={this.handleChange}/>
@@ -149,6 +180,46 @@ export default class Links extends React.Component{
               <li key={post.id}>{post.id}{post.title}</li>
             )}
           </ul>
+
+          <div className="modal fade" id="terminModal" tabIndex="-1" role="dialog" aria-labelledby="terminModalLabel" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="terminModalLabel">Termin anlegen</h5>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <form onSubmit={this.onSubmit.bind(this)}>
+                    <div className="form-group">
+                      <label htmlFor="vorname">Vorname</label>
+                      <input type="text" className="form-control" ref="vorname" placeholder="Vornamen eingeben" required/>
+                      
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="nachname">Nachname</label>
+                      <input type="text" className="form-control" ref="nachname" placeholder="Nachnamen eingeben" required/>
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="diagnose">Beschwerden</label>
+                      <input type="text" className="form-control" ref="diagnose" placeholder="Beschwerde/n angeben" required/>
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="datum">Beschwerden</label>
+                      <input type="date" className="form-control" ref="datum" placeholder="Datum auswählen" required/>
+                    </div>
+                    
+                    <div className="modal-footer">
+                      <button type="submit" className="btn btn-primary">anlegen</button>
+                      <button type="button" className="btn btn-secondary" data-dismiss="modal">abbrechen</button>
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
         </div>
       );
     }
