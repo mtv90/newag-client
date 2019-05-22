@@ -1,0 +1,24 @@
+@import '~@fullcalendar/core/main.css';
+@import '~@fullcalendar/daygrid/main.css';
+@import '~@fullcalendar/timegrid/main.css';
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+}
+.hello{
+  margin-top: 100px;
+}
+
+.spinner {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20vh;
+}
+.jum {
+  border-radius: 0;
+  box-shadow: 15px 15px grey;
+}
+

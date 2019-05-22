@@ -1,0 +1,52 @@
+{
+  "name": "newag-client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fullcalendar/daygrid": "^4.1.0",
+    "@fullcalendar/interaction": "^4.1.0",
+    "@fullcalendar/react": "^4.1.0",
+    "@fullcalendar/timegrid": "^4.1.0",
+    "axios": "^0.18.0",
+    "bootstrap": "^4.3.1",
+    "history": "^4.9.0",
+    "jquery": "^3.4.1",
+    "moment": "^2.24.0",
+    "popper.js": "^1.15.0",
+    "rc-select": "^9.1.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "3.0.1",
+    "react-spinkit": "^3.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "css-loader": "^2.1.1",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "4.29.6"
+  }
+}
