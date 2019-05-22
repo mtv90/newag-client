@@ -19,7 +19,8 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
-    "react-spinkit": "^3.0.0"
+    "react-spinkit": "^3.0.0",
+    "webpack": "4.29.6"
   },
   "scripts": {
     "start": "react-scripts start",

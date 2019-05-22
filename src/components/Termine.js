@@ -63,7 +63,7 @@ export default class Links extends React.Component{
    }
 
   onSubmitTermin(e) {
-    e.preventDefault();
+    // e.preventDefault();
 
     const title =  this.refs.title.value.trim();
 
