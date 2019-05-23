@@ -32,7 +32,7 @@ export default class Routes extends React.Component {
         return (
             <Switch>
                 <Route exact={true} path="/" component={Hello} />
-                <Route exact path="/links" component={Links}/>
+                <Route exact path="/termine" component={Termine}/>
                 <Route path="*" component={NotFound} />
               </Switch>
       )
