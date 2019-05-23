@@ -47,19 +47,20 @@ export default class Links extends React.Component{
     //     error: err
     //   })
     // })
-  //   axios.get('http://localhost:8080/patient2/api/patients')
-  //   // axios.get('https://newag-app.herokuapp.com/api/termine')
-  //   .then(res => {
-  //     this.setState({
-  //       patients: res.data,
-  //       isLoading: false
-  //     })
-  //   })
-  //   .catch(err => {
-  //     this.setState({
-  //       error: err
-  //     })
-  //   })
+    axios.get('http://localhost:8080/patient2/api/patients')
+    // axios.get('https://newag-app.herokuapp.com/api/termine')
+    .then(res => {
+      console.log(res.data)
+      this.setState({
+        patients: res.data,
+        isLoading: false
+      })
+    })
+    .catch(err => {
+      this.setState({
+        error: err
+      })
+    })
    }
 
   onSubmitTermin(e) {
@@ -128,7 +129,7 @@ export default class Links extends React.Component{
               <p>FHIR Patienten</p>
               <ul className="list-group">
                 {this.state.patients.map(patient =>
-                  <li className="list-group-item" key={patient.id}>{patient.id}, {patient.vorname}</li>
+                  <li className="list-group-item" key={patient.id}>{patient.fhirId}, {patient.name}</li>
                 )}
               </ul>
             </div>
