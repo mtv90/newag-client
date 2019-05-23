@@ -19,8 +19,8 @@ export default class Links extends React.Component{
   componentDidMount() {
 
     this.setState({isLoading: true});
-    // axios.get('http://localhost:8080/patient2/appointments')
-    axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint für Produktiv
+    axios.get('http://localhost:8080/patient2/appointments')
+    // axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint für Produktiv
     .then(res => {
       console.log(res.data._embedded)
       this.setState({
@@ -67,8 +67,9 @@ export default class Links extends React.Component{
     // e.preventDefault();
 
     const title =  this.refs.title.value.trim();
-
-    axios.post('https://newag-app.herokuapp.com/patient2/appointments', {
+    // http://localhost:8080/patient2/appointments
+    // https://newag-app.herokuapp.com/patient2/appointments
+    axios.post('http://localhost:8080/patient2/appointments', {
       name: title
     })
     .then(res => {
