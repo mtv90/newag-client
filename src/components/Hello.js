@@ -1,4 +1,3 @@
-
 import React from 'react';
 import history from '../history'
 export default class Hello extends React.Component{
@@ -63,6 +62,7 @@ export default class Hello extends React.Component{
                 <button type="submit">Suchen</button>
                 </form>
              </div>
+
         </div>
       );
     }

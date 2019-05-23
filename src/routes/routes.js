@@ -2,14 +2,16 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import history from '../history';
-import Signup from '../components/Signup';
-import Login from '../components/Login';
+
 import NotFound from '../components/NotFound';
 import Links from '../components/Links';
 import Hello from '../components/Hello';
 import Dashboard from '../components/Dashboard';
+import Termine from '../components/Termine';
+
 const unauthPages = ['/signup', '/login', '/links'];
 const authPages = ['/dashboard'];
+
 
 export const onAuthChange = (isAuth) => {
     const pathname = history.location.pathname;
@@ -24,48 +26,13 @@ export const onAuthChange = (isAuth) => {
     }
 }
 
-// const isLoggedIn = () => {
-//     if(Meteor.userId()){
-//       return true
-//     }else {
-//       return false
-//     }
-//   }
 
 export default class Routes extends React.Component {
     render () {
         return (
             <Switch>
                 <Route exact={true} path="/" component={Hello} />
-                <Route path="/signup" component={Signup}
-                    // render={ () =>
-                    //     !(isLoggedIn()) ? (
-                    //         <Signup />
-                    //     ) : (
-                    //         <Redirect to="/dashboard" />
-                    //     )
-                    // } 
-                />
-                <Route path="/login" component={Login}
-                    // render={ () =>
-                    // !(isLoggedIn()) ? (
-                    //     <Login />
-                    // ) : (
-                    //     <Redirect to="/dashboard" />
-                    // )
-                    // } 
-        
-                />
                 <Route exact path="/links" component={Links}/>
-                <Route exact path="/dashboard" component={Dashboard}
-                // render={ () =>
-                //     isLoggedIn() ? (
-                //         <Dashboard />
-                //     ) : (
-                //         <Redirect to="/login"/>
-                //     )
-                //     }
-                    />
                 <Route path="*" component={NotFound} />
               </Switch>
       )

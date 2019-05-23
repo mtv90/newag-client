@@ -4,7 +4,6 @@ import axios from 'axios';
 // import {Link} from 'react-router-dom';
 // import mkFhir from 'fhir.js';
 import $ from 'jquery'; 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 
 

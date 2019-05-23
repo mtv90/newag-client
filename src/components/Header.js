@@ -9,7 +9,8 @@ export default class Header extends React.Component{
                     <Link className="navbar-brand" to="/">
                         {/* <img src="" className="img-responsive" alt="logo" height="35" width="50"/> */}
                         <span className="navbar-brand">newag</span></Link>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        
+                {/*    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
@@ -27,7 +28,18 @@ export default class Header extends React.Component{
                             <Link className="navbar-brand" to="/signup">Registrieren</Link>
                             </li>
                         </ul>
-                    </div>
+                    </div>*/}
+                    {/* <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                    </button> */}
+                    {/* <div className="collapse navbar-collapse" id="navbarNav"> */}
+                        <ul className="nav navbar-nav float-right">
+                            <li>
+                            <Link className="navbar-brand menu-color" to="/termine">Termine</Link>
+                            </li>
+                        </ul>
+                    {/* </div> */}
+
                 </nav>
 
             </header>
