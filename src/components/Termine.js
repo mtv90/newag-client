@@ -33,6 +33,7 @@ export default class Links extends React.Component{
         error: err
       })
     })
+    
     // axios.get('http://localhost:8080/patient2/patients')
     // // axios.get('https://newag-app.herokuapp.com/api/termine')
     // .then(res => {
