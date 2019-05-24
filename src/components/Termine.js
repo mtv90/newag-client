@@ -113,20 +113,68 @@ export default class Links extends React.Component{
       <div className="container">
         <h2>FHIR-Patienten</h2>
         {/* Button zum Auslösen des Modals */}
-        <div className="mb-4">
+       
+		<div className="container">
+		<div className="row">
+		<div className="col-sm-8">
+		
+			<br/>
+			<div classname="dropdown-menu dropdown-menu-right" role="menu">
+                                <form className="form-horizontal" role="form">
+                                  <div className="form-group">
+									<label><b>Suchkriterium</b></label>
+                                    <select className="form-control">
+                                        <option value="0">Vorname</option>
+                                        <option value="1">Nachname</option>
+                                        <option value="2">Geburtsdatum</option>
+                      
+                                    </select>
+                                  </div>
+                                  <div className="form-group">
+                                    <input className="form-control" type="text" />
+                                  </div>
+                                  <button type="button" className="btn btn-primary">suchen</button>
+                                </form>
+							<br/>
+						
+                            </div>
+		
+		</div>
+		</div>
+		</div>
+		
+		<div className="container">
+		<div className="row">
+		<div className="col-sm-8">
+		<hr />
+		</div>
+		</div>
+		</div>
+		
+		
+		<div className="col-sm-8">
+		<div classname="row">
+		<div className="mb-4">
           <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#terminModal">
             Termin anlegen
           </button>
-          <button type="button" className="btn btn-primary float-right" data-toggle="modal" data-target="#patientModal">
+         
+		<button type="button" className="btn btn-primary float-right" data-toggle="modal" data-target="#patientModal">
             Patienten anlegen
           </button>
         </div>
+		</div>
+		</div>
         <div className="row">
           <div className="col-md-8">
             <Kalender/>
           </div>
           <div className="col-md-4">
             <div className="col-md-12">
+
+		
+
+
               <p>FHIR Patienten</p>
               <ul className="list-group">
                 {this.state.patients.map(patient =>
