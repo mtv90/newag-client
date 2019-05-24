@@ -107,7 +107,7 @@ export default class Links extends React.Component{
     	e.preventDefault();
     	const item = this.refs.suchbegriff.value.trim().toString();
 		const date = this.refs.geburtsdatum.value;
-    	var sonderzeichen = new RegExp("[!?$&|:;,.-_=()+*#^°<>{}%§~]")
+    	var sonderzeichen = new RegExp("[!?$&|:;,.-_=()+*#^ï¿½<>{}%ï¿½~]")
     	console.log(sonderzeichen.test(item))
 		console.log(date);
     	if(item){
@@ -140,43 +140,30 @@ export default class Links extends React.Component{
         <h2>FHIR-Patienten</h2>
         {/* Button zum AuslÃ¶sen des Modals */}
        
-		<div className="container">
-			<div className="row">
-				<div className="col-sm-10">
+
+				<div className="col-md-12">
 					<br/>
 					<form className="form-horizontal" onSubmit={this.onSubmit.bind(this)}>
-                    	<div className="form-group row">
-                        	<input className="form-control col-sm-5 mr-2" type="text" ref="suchbegriff" placeholder="Bitte Namen des Patienten eingeben"/>
-							<input className="form-control col-sm-5 mr-2" type="date" ref="geburtsdatum" placeholder="..oder Geburtsdatum eingeben"/>
+            <div className="form-group row">
+              <input className="form-control col-md-5 mr-2" type="text" ref="suchbegriff" placeholder="Bitte Namen des Patienten eingeben"/>
+							<input className="form-control col-md-5 mr-2" type="date" ref="geburtsdatum" placeholder="..oder Geburtsdatum eingeben"/>
 							<button type="submit" className="btn btn-primary">suchen</button>
 						</div>
 					</form>
 					<br/>
 				</div>
-			</div>
-		</div>
-		
-		<div className="container">
+      <hr/>
 		<div className="row">
-		<div className="col-sm-8">
-		<hr />
-		</div>
-		</div>
-		</div>
-		
-		
-		<div className="col-sm-8">
-		<div classname="row">
-		<div className="mb-4">
+      <div className="col-md-12">
+        <div className="mb-4">
           <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#terminModal">
             Termin anlegen
           </button>
-         
-		<button type="button" className="btn btn-primary float-right" data-toggle="modal" data-target="#patientModal">
+          <button type="button" className="btn btn-primary float-right" data-toggle="modal" data-target="#patientModal">
             Patienten anlegen
           </button>
         </div>
-		</div>
+      </div>
 		</div>
         <div className="row">
           <div className="col-md-8">
@@ -184,10 +171,6 @@ export default class Links extends React.Component{
           </div>
           <div className="col-md-4">
             <div className="col-md-12">
-
-		
-
-
               <p>FHIR Patienten</p>
               <ul className="list-group">
                 {this.state.patients.map(patient =>
