@@ -19,8 +19,8 @@ export default class Links extends React.Component{
   componentDidMount() {
 
     this.setState({isLoading: true});
-    axios.get('http://localhost:8080/patient2/appointments')
-    // axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint f√ºr Produktiv
+    // axios.get('http://localhost:8080/patient2/appointments')
+    axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint f√ºr Produktiv
     .then(res => {
       console.log(res.data._embedded)
       this.setState({
@@ -70,7 +70,7 @@ export default class Links extends React.Component{
     const title =  this.refs.title.value.trim();
     // http://localhost:8080/patient2/appointments
     // https://newag-app.herokuapp.com/patient2/appointments
-    axios.post('http://localhost:8080/patient2/appointments', {
+    axios.post('https://newag-app.herokuapp.com/patient2/appointments', {
       name: title
     })
     .then(res => {
@@ -102,6 +102,31 @@ export default class Links extends React.Component{
 
 
   }
+
+    onSubmit(e){
+    	e.preventDefault();
+    	const item = this.refs.suchbegriff.value.trim().toString();
+		const date = this.refs.geburtsdatum.value;
+    	var sonderzeichen = new RegExp("[!?$&|:;,.-_=()+*#^∞<>{}%ß~]")
+    	console.log(sonderzeichen.test(item))
+		console.log(date);
+    	if(item){
+    		if(item.length >=2 && !sonderzeichen.test(item)){
+    			console.log(item)
+    		}
+    			
+    		if(sonderzeichen.test(item)){
+    			console.log("keine Sonderzeichen")
+    	    }
+			if(item.length < 2){
+				console.log("zu wenige Zeichen")
+			}
+    	}
+    	
+
+    	
+    	
+    }
   render(){
 
     var Spinner = require('react-spinkit');
@@ -114,20 +139,55 @@ export default class Links extends React.Component{
       <div className="container">
         <h2>FHIR-Patienten</h2>
         {/* Button zum Ausl√∂sen des Modals */}
-        <div className="mb-4">
+       
+		<div className="container">
+			<div className="row">
+				<div className="col-sm-10">
+					<br/>
+					<form className="form-horizontal" onSubmit={this.onSubmit.bind(this)}>
+                    	<div className="form-group row">
+                        	<input className="form-control col-sm-5 mr-2" type="text" ref="suchbegriff" placeholder="Bitte Namen des Patienten eingeben"/>
+							<input className="form-control col-sm-5 mr-2" type="date" ref="geburtsdatum" placeholder="..oder Geburtsdatum eingeben"/>
+							<button type="submit" className="btn btn-primary">suchen</button>
+						</div>
+					</form>
+					<br/>
+				</div>
+			</div>
+		</div>
+		
+		<div className="container">
+		<div className="row">
+		<div className="col-sm-8">
+		<hr />
+		</div>
+		</div>
+		</div>
+		
+		
+		<div className="col-sm-8">
+		<div classname="row">
+		<div className="mb-4">
           <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#terminModal">
             Termin anlegen
           </button>
-          <button type="button" className="btn btn-primary float-right" data-toggle="modal" data-target="#patientModal">
+         
+		<button type="button" className="btn btn-primary float-right" data-toggle="modal" data-target="#patientModal">
             Patienten anlegen
           </button>
         </div>
+		</div>
+		</div>
         <div className="row">
           <div className="col-md-8">
             <Kalender/>
           </div>
           <div className="col-md-4">
             <div className="col-md-12">
+
+		
+
+
               <p>FHIR Patienten</p>
               <ul className="list-group">
                 {this.state.patients.map(patient =>
