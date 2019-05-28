@@ -33,11 +33,6 @@ export default class Kalender extends React.Component {
 
       // Hole alle Termine aus dem Backend und der DB
 
-      // calendarEvents: this.state.calendarEvents.concat({ // creates a new array
-      //   title: 'New Event',
-      //   start: arg.date,
-      //   allDay: arg.allDay
-      // })
       this.setState({isLoading: true});
       axios.get('http://localhost:8080/patient2/appointments')
       // axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint für Produktiv
@@ -144,7 +139,7 @@ export default class Kalender extends React.Component {
     }
 
     onSubmitTermin(e) {
-        e.preventDefault();
+        // e.preventDefault();
         
         const title =  this.refs.title.value.trim();
         const date = this.refs.date.value;
@@ -174,7 +169,5 @@ export default class Kalender extends React.Component {
             error: err
           })
         })
-
-        console.log(title, moment(start).format("ddd, DD.MM.YYYY, HH:mm"));
       }
 }
