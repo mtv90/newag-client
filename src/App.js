@@ -13,9 +13,6 @@ export default class App extends React.Component {
       termine:[]
     }
   }
-  componentDidMount(){
-
-  }
   render(){
     return (
       <div>

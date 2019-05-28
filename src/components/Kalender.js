@@ -1,71 +1,127 @@
 import React from 'react';
-
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
+import moment from 'moment';
+import axios from 'axios';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
 export default class Kalender extends React.Component {
     calendarComponentRef = React.createRef()
     constructor(props){
         super(props);
         this.state = {
+            patients:[],
+            appointments: [],
+            isLoading: false,
             calendarWeekends: false,
             calendarEvents: [ // initial event data
                 { title: 'Event Now', start: new Date() }
             ]
         }
     }
-    
-    render() {
-        return (
-            <div className="container-fluid">
-            <button className="btn btn-default bg-dark text-white" onClick={ this.toggleWeekends }>toggle weekends</button>
-                <h3>Kalender</h3>
-                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#terminModal">
-            Termin TESTanlegen
-          </button>
-                <FullCalendar
-                    defaultView="timeGridWeek"
-                    header={{
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-                    }}
-                    plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-                    ref={ this.calendarComponentRef }
-                    weekends={ this.state.calendarWeekends }
-                    events={ this.state.calendarEvents }
-                    dateClick={ this.handleDateClick }
-                />
+    componentDidMount() {
+      this.setState({isLoading: true});
+      axios.get('http://localhost:8080/patient2/api/patients')
+      // axios.get('https://newag-app.herokuapp.com/api/termine')
+      .then(res => {
+        this.setState({
+          patients: res.data,
+          isLoading: false
+        })
+      })
+      .catch(err => {console.log(err)})
 
-<div className="modal fade" id="terminModal" tabIndex="-1" role="dialog" aria-labelledby="terminModalLabel" aria-hidden="true">
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="terminModalLabel">Termin anlegen</h5>
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div className="modal-body">
-                  <form onSubmit={this.onSubmitTermin.bind(this)}>
-                   <div className="form-group">
-                      <label htmlFor="title">Terminname</label>
-                      <input type="text" className="form-control" ref="title" placeholder="Titel eingeben" required/>
+      // Hole alle Termine aus dem Backend und der DB
+
+      // calendarEvents: this.state.calendarEvents.concat({ // creates a new array
+      //   title: 'New Event',
+      //   start: arg.date,
+      //   allDay: arg.allDay
+      // })
+      this.setState({isLoading: true});
+      axios.get('http://localhost:8080/patient2/appointments')
+      // axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint für Produktiv
+      .then(res => {
+        this.setState({
+          calendarEvents: res.data._embedded.appointments,
+          isLoading: false
+        })
+      })
+      .then(()=>{
+        console.log(this.state.calendarEvents)
+      })
+      .catch(err => {
+        this.setState({
+          error: err
+        })
+      })
+    }
+    render() {
+      var Spinner = require('react-spinkit');
+      const {isLoading} = this.state;
+  
+      if (isLoading) {
+        return  <Spinner name='ball-grid-pulse' className="spinner" color="#00CED1" />;
+      }
+        return (
+            <div>
+              <button className="btn btn-sm bg-secondary text-light" onClick={ this.toggleWeekends }>toggle weekends</button>
+              <button type="button" className="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#terminModalKalender">
+                <span className="fas fa-plus"></span> Termin
+              </button>
+              <div className="row">
+                <h2 className="mx-auto">Meine Patientenplaner</h2>
+              </div>
+              <FullCalendar 
+                defaultView="timeGridWeek"
+                header={{
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                }}
+                plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
+                ref={ this.calendarComponentRef }
+                weekends={ this.state.calendarWeekends }
+                events={ this.state.calendarEvents }
+                dateClick={ this.handleDateClick }
+              />
+              <div className="modal fade" id="terminModalKalender" tabIndex="-1" role="dialog" aria-labelledby="terminModalLabel" aria-hidden="true">
+                <div className="modal-dialog" role="document">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h5 className="modal-title" id="terminModalLabel">Termin anlegen</h5>
+                      <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="date">Datum</label>
-                      <input type="datetime-local" className="form-control" ref="date" placeholder="Datum angeben" required/>
-                    </div>               
-                    <div className="modal-footer">
-                      <button type="submit" className="btn btn-primary">anlegen</button>
-                      <button type="button" className="btn btn-secondary" data-dismiss="modal">abbrechen</button>
+                    <div className="modal-body">
+                      <form onSubmit={this.onSubmitTermin.bind(this)}>
+                        <div className="form-group">
+                          <label htmlFor="title">Terminname</label>
+                          <input type="text" className="form-control" ref="title" placeholder="Titel eingeben" required/>
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="date">Datum</label>
+                          <input type="datetime-local" className="form-control" ref="date" placeholder="Datum angeben" required/>
+                        </div> 
+                        <div className="form-group">
+                          <label htmlFor="patient">Patienten auswählen</label>
+                          <select className="form-control" id="patientid" ref="patient_id">
+                            <option>Bitte Patienten auswählen</option>
+                            {this.state.patients.map(patient =>
+                              <option key={patient.id} value={patient.id}>{patient.fhirId}, {patient.name}</option>
+                            )}
+                          </select>    
+                        </div>               
+                        <div className="modal-footer">
+                          <button type="submit" className="btn btn-primary">anlegen</button>
+                          <button type="button" className="btn btn-secondary" data-dismiss="modal">abbrechen</button>
+                        </div>
+                      </form>
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
             </div>
         );
     }
@@ -84,20 +140,41 @@ export default class Kalender extends React.Component {
               allDay: arg.allDay
             })
           })
-        
+        console.log(this.state.calendarEvents[0].start)
     }
 
     onSubmitTermin(e) {
         e.preventDefault();
-    
-        const name =  this.refs.title.value.trim();
+        
+        const title =  this.refs.title.value.trim();
         const date = this.refs.date.value;
+        const start = new Date(date);
+        const patient = {
+          id: this.refs.patient_id.value.trim()
+        }
+        
         this.setState({
             calendarEvents: this.state.calendarEvents.concat({
-                title: name, 
-                start: date
+                title: title, 
+                start: start
             })
         })
-        console.log(name, date);
+        axios.post('http://localhost:8080/patient2/api/appointments', {
+        
+          title: title,
+          patient,
+          start
+        })
+        .then(res => {
+    
+          console.log(res)
+        })
+        .catch(err => {
+          this.setState({
+            error: err
+          })
+        })
+
+        console.log(title, moment(start).format("ddd, DD.MM.YYYY, HH:mm"));
       }
 }

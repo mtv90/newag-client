@@ -28,39 +28,18 @@ export default class Hello extends React.Component{
     showAll(){
         history.push('/links');
     }
-    onSubmit(e){
-    	e.preventDefault();
-    	const item = this.refs.suchbegriff.value.trim();
-    	var sonderzeichen = new RegExp("[!?$&|:;,.-_=()+*#^°/\<>{}%§~€]")
-    	console.log(sonderzeichen.test(item))
-    	if(item){
-    		if(item.length >=2 && !sonderzeichen.test(item)){
-    			console.log(item)
-    		}
-    			
-    		if(sonderzeichen.test(item) == true){
-    			console.log("keine Sonderzeichen")
-    	    }
-    	}else{
-    		console.log("zu wenige Zeichen")
-    	}
-    	
-
-    	
-    	
-    }
     render(){
       return (
         <div className="container hello">
             <div className="jumbotron bg-dark text-white jum">
                 <h1 className="display-3 mb-4 text-center menu-color">Newag Online-Terminbuchung</h1>
-                <form onSubmit={this.onSubmit.bind(this)}>
+                {/* <form onSubmit={this.onSubmit.bind(this)}>
                 <div className="form-group">
                 	<label>Name</label>
                 	<input type="text" name="suchbegriff" ref="suchbegriff"/>
                 </div>
                 <button type="submit">Suchen</button>
-                </form>
+                </form> */}
              </div>
 
         </div>
