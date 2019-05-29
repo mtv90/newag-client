@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import {patientGET, patientPOST} from '../config/endpoints';
 
 export default class Patientenliste extends React.Component{
     constructor(props){
@@ -12,8 +13,9 @@ export default class Patientenliste extends React.Component{
 
     componentDidMount(){
         this.setState({isLoading: true});
-        axios.get('http://localhost:8080/patient2/api/patients')
-        // axios.get('https://newag-app.herokuapp.com/api/termine')
+        axios.get(patientGET)
+        // http://localhost:8080/patient2/api/patients
+        // axios.get('https://newag-app.herokuapp.com/api/termine')  
         .then(res => {
           
           this.setState({
@@ -38,7 +40,8 @@ export default class Patientenliste extends React.Component{
         
         console.log(appointment)
     
-        axios.post('http://localhost:8080/patient2/api/patients', {
+        axios.post(patientPOST, {
+            // 'http://localhost:8080/patient2/patients'
           appointment,
           vorname: vorname,
           nachname: nachname,
@@ -66,7 +69,7 @@ export default class Patientenliste extends React.Component{
                 <h3>Meine Patienten</h3>
                 <ul className="list-group">
                     {this.state.patients.map(patient =>
-                        <li className="list-group-item" key={patient.id}>{patient.fhirId}, {patient.name}</li>
+                        <li className="list-group-item" key={patient.id}>{patient.id} | {patient.nachname}, {patient.vorname}</li>
                     )}
               </ul>
               <div className="modal fade" id="patientModal" tabIndex="-1" role="dialog" aria-labelledby="patientModalLabel" aria-hidden="true">

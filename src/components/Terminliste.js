@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import moment from 'moment';
+import {appointmentGET} from '../config/endpoints';
 
 export default class Terminliste extends React.Component{
     constructor(props){
@@ -12,7 +14,8 @@ export default class Terminliste extends React.Component{
 
     componentDidMount() {
         this.setState({isLoading: true});
-        axios.get('http://localhost:8080/patient2/appointments')
+        axios.get(appointmentGET)
+        // 'http://localhost:8080/patient2/appointments'
         // axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint für Produktiv
         .then(res => {
           this.setState({
@@ -39,7 +42,7 @@ export default class Terminliste extends React.Component{
                 <h3>Termine</h3>
                 <ul className="list-group">
                     {this.state.appointments.map((termin, index) =>
-                        <li className="list-group-item" key={index}>{termin.name}</li>
+                        <li className="list-group-item" key={index}>{moment(termin.start).format('dd, DD.MM.YYYY, HH:mm')}: {termin.title}</li>
                     )}
                 </ul>
             </div>

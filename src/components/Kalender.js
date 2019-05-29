@@ -1,10 +1,11 @@
 import React from 'react';
-import moment from 'moment';
 import axios from 'axios';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import {appointmentGET,appointmentPOST, patientGET} from '../config/endpoints';
+
 export default class Kalender extends React.Component {
     calendarComponentRef = React.createRef()
     constructor(props){
@@ -21,7 +22,8 @@ export default class Kalender extends React.Component {
     }
     componentDidMount() {
       this.setState({isLoading: true});
-      axios.get('http://localhost:8080/patient2/api/patients')
+      axios.get(patientGET)
+      // http://localhost:8080/patient2/api/patients
       // axios.get('https://newag-app.herokuapp.com/api/termine')
       .then(res => {
         this.setState({
@@ -34,7 +36,8 @@ export default class Kalender extends React.Component {
       // Hole alle Termine aus dem Backend und der DB
 
       this.setState({isLoading: true});
-      axios.get('http://localhost:8080/patient2/appointments')
+      axios.get(appointmentGET)
+      // http://localhost:8080/patient2/appointments
       // axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint für Produktiv
       .then(res => {
         this.setState({
@@ -104,7 +107,7 @@ export default class Kalender extends React.Component {
                           <select className="form-control" id="patientid" ref="patient_id">
                             <option>Bitte Patienten auswählen</option>
                             {this.state.patients.map(patient =>
-                              <option key={patient.id} value={patient.id}>{patient.fhirId}, {patient.name}</option>
+                              <option key={patient.id} value={patient.id}>{patient.id}, {patient.nachname}</option>
                             )}
                           </select>    
                         </div>               
@@ -139,7 +142,7 @@ export default class Kalender extends React.Component {
     }
 
     onSubmitTermin(e) {
-        // e.preventDefault();
+        e.preventDefault();
         
         const title =  this.refs.title.value.trim();
         const date = this.refs.date.value;
@@ -154,8 +157,8 @@ export default class Kalender extends React.Component {
                 start: start
             })
         })
-        axios.post('http://localhost:8080/patient2/api/appointments', {
-        
+        axios.post(appointmentPOST, {
+          // http://localhost:8080/patient2/api/appointments
           title: title,
           patient,
           start
