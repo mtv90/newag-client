@@ -27,7 +27,7 @@ export default class Kalender extends React.Component {
       // axios.get('https://newag-app.herokuapp.com/api/termine')
       .then(res => {
         this.setState({
-          patients: res.data,
+          patients: res.data._embedded.patients,
           isLoading: false
         })
       })

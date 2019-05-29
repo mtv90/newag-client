@@ -8,18 +8,19 @@ export default class Patientenliste extends React.Component{
         this.state={
             isLoading: false,
             patients:[],
+            patientGET,
+            patientPOST
         }
     }
 
     componentDidMount(){
         this.setState({isLoading: true});
         axios.get(patientGET)
-        // http://localhost:8080/patient2/api/patients
+        // "http://localhost:8080/patient2/api/patients"
         // axios.get('https://newag-app.herokuapp.com/api/termine')  
         .then(res => {
-          
           this.setState({
-            patients: res.data,
+            patients: res.data._embedded.patients,
             isLoading: false
           })
         })
