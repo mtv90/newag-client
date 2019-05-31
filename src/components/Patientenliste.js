@@ -15,12 +15,14 @@ export default class Patientenliste extends React.Component{
 
     componentDidMount(){
         this.setState({isLoading: true});
-        axios.get(patientGET)
+        axios.get("http://localhost:8080/patient2/api/patients")
         // "http://localhost:8080/patient2/api/patients"
         // axios.get('https://newag-app.herokuapp.com/api/termine')  
         .then(res => {
+            console.log(res)
           this.setState({
-            patients: res.data._embedded.patients,
+            patients: res.data,
+            // ._embedded.patients,
             isLoading: false
           })
         })
@@ -39,8 +41,7 @@ export default class Patientenliste extends React.Component{
          const diagnose =  this.refs.diagnose.value.trim();
         const appointment =  this.refs.appointment.value.trim();
         
-        console.log(appointment)
-    
+            
         axios.post(patientPOST, {
             // 'http://localhost:8080/patient2/patients'
           appointment,

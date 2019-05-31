@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import $ from "jquery";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -22,12 +23,12 @@ export default class Kalender extends React.Component {
     }
     componentDidMount() {
       this.setState({isLoading: true});
-      axios.get(patientGET)
+      axios.get("http://localhost:8080/patient2/api/patients")
       // http://localhost:8080/patient2/api/patients
       // axios.get('https://newag-app.herokuapp.com/api/termine')
       .then(res => {
         this.setState({
-          patients: res.data._embedded.patients,
+          patients: res.data,
           isLoading: false
         })
       })
@@ -42,6 +43,7 @@ export default class Kalender extends React.Component {
       .then(res => {
         this.setState({
           calendarEvents: res.data._embedded.appointments,
+          // ._embedded.appointments,
           isLoading: false
         })
       })
@@ -106,8 +108,8 @@ export default class Kalender extends React.Component {
                           <label htmlFor="patient">Patienten auswählen</label>
                           <select className="form-control" id="patientid" ref="patient_id">
                             <option>Bitte Patienten auswählen</option>
-                            {this.state.patients.map(patient =>
-                              <option key={patient.id} value={patient.id}>{patient.id}, {patient.nachname}</option>
+                            {this.state.patients.map((patient, index) =>
+                              <option key={index} value={patient.id}>{patient.id}, {patient.nachname}</option>
                             )}
                           </select>    
                         </div>               
@@ -157,7 +159,7 @@ export default class Kalender extends React.Component {
                 start: start
             })
         })
-        axios.post(appointmentPOST, {
+        axios.post(" http://localhost:8080/patient2/api/appointments", {
           // http://localhost:8080/patient2/api/appointments
           title: title,
           patient,
@@ -166,6 +168,7 @@ export default class Kalender extends React.Component {
         .then(res => {
     
           console.log(res)
+          // $().alert('TEST');
         })
         .catch(err => {
           this.setState({
