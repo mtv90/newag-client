@@ -34,7 +34,7 @@ export default class Patientenliste extends React.Component{
     }
 
     onSubmitPatient(e) {
-        e.preventDefault();
+        // e.preventDefault();
         
          const vorname =  this.refs.vorname.value.trim();
          const nachname =  this.refs.nachname.value.trim();

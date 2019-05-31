@@ -144,7 +144,7 @@ export default class Kalender extends React.Component {
     }
 
     onSubmitTermin(e) {
-        e.preventDefault();
+        // e.preventDefault();
         
         const title =  this.refs.title.value.trim();
         const date = this.refs.date.value;
@@ -165,11 +165,11 @@ export default class Kalender extends React.Component {
           patient,
           start
         })
-        .then(res => {
+        // .then(res => {
     
-          console.log(res)
-          // $().alert('TEST');
-        })
+        //   console.log(res)
+        //   // $().alert('TEST');
+        // })
         .catch(err => {
           this.setState({
             error: err
