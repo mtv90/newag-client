@@ -7,7 +7,7 @@ export default class Hello extends React.Component{
             item: ''
         }
         this.handleChange = this.handleChange.bind(this)
-        this.submit = this.submit.bind(this)
+        // this.submit = this.submit.bind(this)
         this.showAll = this.showAll.bind(this)
     }
     // submit(event){
