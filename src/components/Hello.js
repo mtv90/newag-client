@@ -1,6 +1,5 @@
 import React from 'react';
 import history from '../history'
-import {appointmentGET} from '../config/endpoints';
 export default class Hello extends React.Component{
     constructor(props) {
         super(props)
