@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import {patientGET, patientPOST} from '../config/endpoints';
 
 export default class Patientenliste extends React.Component{
@@ -8,8 +9,10 @@ export default class Patientenliste extends React.Component{
         this.state={
             isLoading: false,
             patients:[],
+            suchbegriff:'',
             patientGET,
-            patientPOST
+            patientPOST,
+            // filteredPatients: []
         }
     }
 
@@ -32,21 +35,39 @@ export default class Patientenliste extends React.Component{
     onSubmitPatient(e) {
         // e.preventDefault();
         
-         const vorname =  this.refs.vorname.value.trim();
-         const nachname =  this.refs.nachname.value.trim();
-         const diagnose =  this.refs.diagnose.value.trim();
-        const appointment =  this.refs.appointment.value.trim();
+        const vorname =  this.refs.vorname.value.trim();
+        const nachname =  this.refs.nachname.value.trim();
+        const diagnose =  this.refs.diagnose.value.trim();
+        const geburtsdatum = this.refs.geburtsdatum.value;
         
-            
         axios.post(patientPOST, {
-          appointment,
           vorname: vorname,
           nachname: nachname,
-          diagnose: diagnose
+          diagnose: diagnose,
+          geburtsdatum: geburtsdatum
         })
         .then(res => console.log(res))
         .catch(err => console.log(err))
       }
+    //   onSubmitSearch(e){
+    //       e.preventDefault();
+    //       const suchbegriff = this.refs.suchbegriff.value.trim();
+          
+    //       this.setState({
+    //           suchbegriff
+    //       })
+    //       this.state.patients.map(patient => {
+    //           let name = patient.vorname + patient.nachname;
+    //           let datum = moment(patient.geburtsdatum).format('DD.MM.YYYY')
+    //           if(name.includes(suchbegriff) || datum.includes(suchbegriff)){
+    //               let results= [];
+    //               this.setState({
+    //                   filteredPatients: results.push(patient)
+    //               })
+    //           }
+    //       })
+    //       console.log(this.state.filteredPatients)
+    //   }
       render() {
         var Spinner = require('react-spinkit');
         const {isLoading} = this.state;
@@ -56,7 +77,16 @@ export default class Patientenliste extends React.Component{
         }
         return(
             <div className="mb-4">
-                  {/* <div className="row border float-right"> */}
+                {/* <h2 className="mt-4 mb-4 text-center">Patientensuche</h2>
+				<form className="form-horizontal" onSubmit={this.onSubmitSearch.bind(this)}>
+                    <div className="form-group row">
+                   
+                        <input className="form-control" type="text" ref="suchbegriff" placeholder="Bitte Namen des Patienten eingeben"/>
+                        <button type="submit" className="btn btn-primary">suchen</button>
+                    
+					</div>
+				</form> */}
+                {/* <div className="row border float-right"> */}
                     {/* <div className="mb-4"> */}
                         <button type="button" className="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#patientModal">
                         <span className="fas fa-plus"></span> Patienten
@@ -93,10 +123,10 @@ export default class Patientenliste extends React.Component{
                                         <label htmlFor="diagnose">Beschwerden</label>
                                         <input type="text" className="form-control" ref="diagnose" placeholder="Beschwerde/n angeben" required/>
                                     </div>
-                                    {/* <div className="form-group">
-                                        <label htmlFor="appointment">Termin</label>
-                                        <input type="text" className="form-control" ref="appointment" placeholder="Termin angeben" />
-                                    </div>                      */}
+                                    <div className="form-group">
+                                        <label htmlFor="geburtsdatum">Geburtsdatum</label>
+                                        <input type="date" className="form-control" ref="geburtsdatum" />
+                                    </div>                     
                                     <div className="modal-footer">
                                         <button type="submit" className="btn btn-primary">anlegen</button>
                                         <button type="button" className="btn btn-secondary" data-dismiss="modal">abbrechen</button>
