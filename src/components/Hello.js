@@ -10,17 +10,16 @@ export default class Hello extends React.Component{
         this.handleChange = this.handleChange.bind(this)
         this.submit = this.submit.bind(this)
         this.showAll = this.showAll.bind(this)
-        console.log(appointmentGET);
     }
-    submit(event){
-        history.push({
-            pathname: '/links',
-            state: {
-                item: this.state.item
-            }
-        });
-        // event.preventDefault();
-    }
+    // submit(event){
+    //     history.push({
+    //         pathname: '/links',
+    //         state: {
+    //             item: this.state.item
+    //         }
+    //     });
+    //     // event.preventDefault();
+    // }
     
     handleChange(event){
         this.setState({
