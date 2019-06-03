@@ -65,7 +65,7 @@ export default class Kalender extends React.Component {
                 <span className="fas fa-plus"></span> Termin
               </button>
               <div className="row">
-                <h2 className="mx-auto">Meine Patientenplaner</h2>
+                <h2 className="mx-auto">Mein Patientenplaner</h2>
               </div>
               <FullCalendar 
                 defaultView="timeGridWeek"
