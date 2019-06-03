@@ -15,14 +15,10 @@ export default class Patientenliste extends React.Component{
 
     componentDidMount(){
         this.setState({isLoading: true});
-        axios.get("http://localhost:8080/patient2/api/patients")
-        // "http://localhost:8080/patient2/api/patients"
-        // axios.get('https://newag-app.herokuapp.com/api/termine')  
+        axios.get(patientGET)
         .then(res => {
-            console.log(res)
           this.setState({
             patients: res.data,
-            // ._embedded.patients,
             isLoading: false
           })
         })
@@ -43,7 +39,6 @@ export default class Patientenliste extends React.Component{
         
             
         axios.post(patientPOST, {
-            // 'http://localhost:8080/patient2/patients'
           appointment,
           vorname: vorname,
           nachname: nachname,
@@ -98,10 +93,10 @@ export default class Patientenliste extends React.Component{
                                         <label htmlFor="diagnose">Beschwerden</label>
                                         <input type="text" className="form-control" ref="diagnose" placeholder="Beschwerde/n angeben" required/>
                                     </div>
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <label htmlFor="appointment">Termin</label>
                                         <input type="text" className="form-control" ref="appointment" placeholder="Termin angeben" />
-                                    </div>                     
+                                    </div>                      */}
                                     <div className="modal-footer">
                                         <button type="submit" className="btn btn-primary">anlegen</button>
                                         <button type="button" className="btn btn-secondary" data-dismiss="modal">abbrechen</button>

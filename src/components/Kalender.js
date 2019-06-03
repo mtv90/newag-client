@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import $ from "jquery";
+
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -23,9 +23,7 @@ export default class Kalender extends React.Component {
     }
     componentDidMount() {
       this.setState({isLoading: true});
-      axios.get("http://localhost:8080/patient2/api/patients")
-      // http://localhost:8080/patient2/api/patients
-      // axios.get('https://newag-app.herokuapp.com/api/termine')
+      axios.get(patientGET)
       .then(res => {
         this.setState({
           patients: res.data,
@@ -38,18 +36,15 @@ export default class Kalender extends React.Component {
 
       this.setState({isLoading: true});
       axios.get(appointmentGET)
-      // http://localhost:8080/patient2/appointments
-      // axios.get('https://newag-app.herokuapp.com/patient2/appointments') //Endpoint für Produktiv
       .then(res => {
         this.setState({
           calendarEvents: res.data._embedded.appointments,
-          // ._embedded.appointments,
           isLoading: false
         })
       })
-      .then(()=>{
-        console.log(this.state.calendarEvents)
-      })
+      // .then(()=>{
+      //   console.log(this.state.calendarEvents)
+      // })
       .catch(err => {
         this.setState({
           error: err
@@ -109,7 +104,7 @@ export default class Kalender extends React.Component {
                           <select className="form-control" id="patientid" ref="patient_id">
                             <option>Bitte Patienten auswählen</option>
                             {this.state.patients.map((patient, index) =>
-                              <option key={index} value={patient.id}>{patient.id}, {patient.nachname}</option>
+                              <option key={index} value={patient.id}>{patient.id} | {patient.nachname}, {patient.vorname}</option>
                             )}
                           </select>    
                         </div>               
@@ -159,16 +154,12 @@ export default class Kalender extends React.Component {
                 start: start
             })
         })
-        axios.post(" http://localhost:8080/patient2/api/appointments", {
-          // http://localhost:8080/patient2/api/appointments
+        axios.post(appointmentPOST, {
           title: title,
           patient,
           start
         })
         // .then(res => {
-    
-        //   console.log(res)
-        //   // $().alert('TEST');
         // })
         .catch(err => {
           this.setState({
