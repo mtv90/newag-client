@@ -35,7 +35,8 @@ export default class Header extends React.Component{
                     {/* <div className="collapse navbar-collapse" id="navbarNav"> */}
                         <ul className="nav navbar-nav float-right">
                             <li>
-                            <Link className="navbar-brand menu-color" to="/termine">Termine</Link>
+                            	<Link className="navbar-brand menu-color" to="/termine">Termine</Link>
+                            	<Link className="navbar-brand menu-color" to="/patiententermin">Patiententermin</Link>
                             </li>
                         </ul>
                     {/* </div> */}
