@@ -9,7 +9,7 @@ import Hello from '../components/Hello';
 
 import Termine from '../components/Termine';
 import Patiententermin from '../components/Patiententermin';
-
+import MeinePatienten from '../components/MeinePatienten';
 
 
 export default class Routes extends React.Component {
@@ -18,6 +18,7 @@ export default class Routes extends React.Component {
         <Switch>
           <Route exact={true} path="/" component={Hello} />
           <Route exact path="/termine" component={Termine}/>
+          <Route exact path="/meinepatienten" component={MeinePatienten}/>
           <Route exact path="/patiententermin" component={Patiententermin}/>
           <Route path="*" component={NotFound} />
         </Switch>
