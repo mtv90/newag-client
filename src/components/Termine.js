@@ -40,22 +40,7 @@ export default class Links extends React.Component{
     }
     return (
       <div className="container-fluid">
-        {/* Button zum Auslösen des Modals */}
-        <div className="col-md-12 bg-light">
-          <h2 className="mt-4 mb-4 text-center">Patientensuche</h2>
-					<form className="form-horizontal" onSubmit={this.onSubmit.bind(this)}>
-            <div className="form-group row">
-              {/* <div className=" mx-auto"> */}
-                <input className="form-control col-md-5 mr-1 ml-4" type="text" ref="suchbegriff" placeholder="Bitte Namen des Patienten eingeben"/>
-                <input className="form-control col-md-5 mr-1" type="date" ref="geburtsdatum" placeholder="..oder Geburtsdatum eingeben"/>
-                <button type="submit" className="btn btn-primary">suchen</button>
-              {/* </div> */}
-						</div>
-					</form>
-					<br/>
-			  </div>
-        <hr/>
-        <div className="row">
+        <div className="row mt-4 pt-4">
           <div className="col-md-10 kalender">
             <Kalender/>
           </div>
