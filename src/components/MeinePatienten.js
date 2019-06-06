@@ -85,7 +85,7 @@ export default class MeinePatienten extends React.Component {
 		  
 	  }
 	  onSubmitSearch(e){
-		  e.preventDefault();
+		e.preventDefault();
 		const item = this.refs.suchbegriff.value.trim();
 		const date = this.refs.geburtsdatum.value.trim();
 		console.log(date)
@@ -130,7 +130,7 @@ export default class MeinePatienten extends React.Component {
 				<br/>
 			</div>
 			<div className="row">
-				{this.state.patients.map(patient => <div className="col-md-12 pt-4 pb-4 alert alert-info" key={patient.resource.id}><Link className="text-decoration-none text-dark" to={{pathname:`/meinepatienten/${patient.resource.id}`, state: {userId: patient.resource.id}}}><p className="display-4">{patient.resource.name[0].family}, {patient.resource.name[0].given[0]}</p> Geburtsdatum: {moment(patient.resource.birthDate).format('DD.MM.YYYY')}</Link></div>)}
+				{this.state.patients ? this.state.patients.map(patient => <div className="col-md-12 pt-4 pb-4 alert alert-info" key={patient.resource.id}><Link className="text-decoration-none text-dark" to={{pathname:`/meinepatienten/${patient.resource.id}`, state: {userId: patient.resource.id}}}><p className="display-4">{patient.resource.name[0].family}, {patient.resource.name[0].given[0]}</p> Geburtsdatum: {moment(patient.resource.birthDate).format('DD.MM.YYYY')}</Link></div>) : <div className="col-md-12 pt-4 pb-4 alert alert-warning"><strong>Keine passenden Patienten gefunden!</strong></div>}
 				<nav className="pagination mb-4 pb-4 mx-auto">
 					<div className="page-item">
 						{this.state.prevPage ? <button className="page-link" value={this.state.prevPage} onClick={this.prev}>previous</button> : <button className="page-link" disabled>previous</button>}

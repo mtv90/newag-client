@@ -23,3 +23,45 @@ body {
   box-shadow: 15px 15px grey;
 }
 
+#txt,
+#hide,
+#txtnach,
+#hidenach{
+  font: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+#txt {
+  border: none;
+  min-width: 10px;
+  border-bottom: solid 1px;
+  margin-right: 6px;
+}
+#txt:focus{
+  border-bottom: solid #00CED1;
+  outline:none;
+  box-shadow: none;
+}
+#txtnach {
+  border: none;
+  min-width: 10px;
+  border-bottom: solid 1px;
+}
+#txtnach:focus{
+  border-bottom: solid #00CED1;
+  outline:none;
+  box-shadow: none;
+}
+#hide {
+  position: absolute;
+  height: 0;
+  overflow: hidden;
+  white-space: pre;
+}
+#hidenach {
+  position: absolute;
+  height: 0;
+  overflow: hidden;
+  white-space: pre;
+}

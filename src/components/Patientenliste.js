@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import moment from 'moment';
+// import moment from 'moment';
 import {patientGET, patientPOST} from '../config/endpoints';
 
 export default class Patientenliste extends React.Component{

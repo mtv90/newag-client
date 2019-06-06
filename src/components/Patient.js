@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import mkFhir from 'fhir.js';
-import moment from 'moment';
+// import mkFhir from 'fhir.js';
+// import moment from 'moment';
 
 export default class MeinePatienten extends React.Component {
     constructor(props){
@@ -23,16 +23,34 @@ export default class MeinePatienten extends React.Component {
             email:{},
             generalPractitioner:[],
             practitioner:{},
+
+            patient:{
+                userId: null,
+                active: null,
+                strasse:'',
+                plz: '',
+                stadt:'',
+                land:'',
+                birthDate:'',
+                gender:'',
+                nachname:'',
+                vorname:'',
+                telefon:{},
+                festnetz:'',
+                email:{},
+                generalPractitioner:[],
+            }
         }
     }
     componentDidMount(){
+
         let userId = this.props.location.state.userId
         if(userId){
             this.setState({userId})
             this.setState({isLoading: true});
             axios.get('http://141.37.123.37:8080/baseDstu3/Patient/'+userId)
                 .then(res => {
-                    console.log(res.data)
+
                     let phone = '';
                     let mail = '';
                     let home = '';
@@ -164,6 +182,32 @@ export default class MeinePatienten extends React.Component {
             land: e.target.value
         })
     }
+    onChangeVorname(e){
+        this.setState({
+            vorname: e.target.value
+        })
+        var hide = document.getElementById('hide');
+        var txt = document.getElementById('txt');
+
+        hide.textContent = e.target.value;
+        txt.style.width = hide.offsetWidth + "px";
+        console.log(txt.value)
+    }
+    onChangeNachname(e){
+        var hide = document.getElementById('hidenach');
+        var txt = document.getElementById('txtnach');
+
+        hide.textContent = e.target.value;
+        this.setState({
+            nachname: e.target.value
+        })
+        txt.style.width = hide.offsetWidth + "px";
+        console.log(txt.style.width, hide.offsetWidth)
+    }
+    onSubmitUpdate(e){
+        e.preventDefault();
+        console.log(e.target.value)
+    }
 
     render(){
         var Spinner = require('react-spinkit');
@@ -173,12 +217,15 @@ export default class MeinePatienten extends React.Component {
 		  return  <Spinner name='ball-grid-pulse' className="spinner" color="#00CED1" />;
 		}
         return <div key={this.state.userId} className="container">
-            
-        <h2 className="mt-4 mb-4 pt-4 pb-4 text-center">{this.state.vorname} {this.state.nachname} {this.state.active ? <span className="badge badge-pill badge-success">aktiv</span> : <span className="badge badge-pill badge-danger">inaktiv</span>}</h2>
+
             <div className="row mb-4">
                 <div className="col-md-12">
-                    <form className="mb-4">
-                    <div className="card mb-4">
+                    <form className="mb-4" onSubmit={this.onSubmitUpdate.bind(this)}>
+                        <h2 className="mt-4 mb-4 pt-4 pb-4 text-center">
+                            <span id="hide"></span><input size="4" id="txt" type="text" maxLength="150" ref="vorname" value={this.state.vorname} onChange={this.onChangeVorname.bind(this)}/>
+                            <span id="hidenach"></span><input size="4" id="txtnach" maxLength="150" type="text" ref="nachname" value={this.state.nachname} onChange={this.onChangeNachname.bind(this)}/> {this.state.active ? <span className="badge badge-pill badge-success">aktiv</span> : <span className="badge badge-pill badge-danger">inaktiv</span>}
+                        </h2>
+                        <div className="card mb-4 bg-light">
                             <div className="card-body">            
                                 <h5 className="card-title">Stammdaten</h5>
                                 <div className="row mb-4">
@@ -192,29 +239,30 @@ export default class MeinePatienten extends React.Component {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="form-group col-md-6">
+                                    <div className="form-group col-md-12">
                                         <label><h6 className="card-subtitle mb-2 text-muted mr-4">Telefon</h6></label>
                                         <div className="row">
-                                            <div className="col-md-6">
+                                            <div className="col-md-3">
                                                 <label>Festnetz</label>
-                                                <input className="form-control" type="tel" value={this.state.festnetz} onChange={this.onChangeFestnetz.bind(this)} placeholder="Nummer eingeben" required/>
+                                                <input className="form-control" type="tel" value={this.state.festnetz} onChange={this.onChangeFestnetz.bind(this)} placeholder="Nummer eingeben" />
+                                            </div>
+                                            <div className="col-md-3">
+                                                <label>Handy</label>
+                                                <input className="form-control" type="tel" value={this.state.telefon.value} onChange={this.onChangeTelefon.bind(this)} placeholder="Nummer eingeben" />
                                             </div>
                                             <div className="col-md-6">
-                                                <label>Handy</label>
-                                                <input className="form-control" type="tel" value={this.state.telefon.value} onChange={this.onChangeTelefon.bind(this)} placeholder="Nummer eingeben" required/>
+                                                <label className="text-muted">Email</label>
+                                                <input className="form-control" type="email" value={this.state.email.value} onChange={this.onChangeEmail.bind(this)} placeholder="Email eingeben"/>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="form-group col-md-6">
-                                        <label><h6 className="card-subtitle mb-2 text-muted mr-4">Email</h6></label>
-                                        <input className="form-control" type="email" value={this.state.email.value} onChange={this.onChangeEmail.bind(this)} placeholder="Email eingeben"/>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
 
 
-                        <div className="card mb-4">
+                        <div className="card mb-4 bg-light">
                             <div className="card-body">            
                                 <h5 className="card-title">Adresse</h5>
                                 <div className="form-group">
@@ -244,7 +292,7 @@ export default class MeinePatienten extends React.Component {
                             </div>
                         </div>
 
-                        <div className="card">
+                        <div className="card bg-light">
                             <div className="card-body">            
                                 <h5 className="card-title">Hausarzt</h5>
                                 <div className="alert alert-light">
