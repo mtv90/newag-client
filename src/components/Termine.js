@@ -60,8 +60,8 @@ export default class Links extends React.Component{
             <Kalender/>
           </div>
           <div className="col-md-2">
-            <Patientenliste/>
-            <hr/>
+            {/* <Patientenliste/>
+            <hr/> */}
             <Terminliste/>
           </div>
         </div>
