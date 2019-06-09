@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+
 // import mkFhir from 'fhir.js';
 // import moment from 'moment';
 
@@ -24,22 +25,9 @@ export default class MeinePatienten extends React.Component {
             generalPractitioner:[],
             practitioner:{},
 
-            patient:{
-                userId: null,
-                active: null,
-                strasse:'',
-                plz: '',
-                stadt:'',
-                land:'',
-                birthDate:'',
-                gender:'',
-                nachname:'',
-                vorname:'',
-                telefon:{},
-                festnetz:'',
-                email:{},
-                generalPractitioner:[],
-            }
+            patient:{},
+            message:'',
+            error:''
         }
     }
     componentDidMount(){
@@ -50,7 +38,7 @@ export default class MeinePatienten extends React.Component {
             this.setState({isLoading: true});
             axios.get('http://141.37.123.37:8080/baseDstu3/Patient/'+userId)
                 .then(res => {
-
+                    
                     let phone = '';
                     let mail = '';
                     let home = '';
@@ -92,7 +80,7 @@ export default class MeinePatienten extends React.Component {
                             mail = res.data.telecom[2].value
                         }
                     }
-
+                    
                     this.setState({
                         active: res.data.active,
                         strasse: res.data.address[0].line[0],
@@ -107,7 +95,8 @@ export default class MeinePatienten extends React.Component {
                         festnetz: home,
                         email:{value: mail},
                         generalPractitioner: res.data.generalPractitioner,
-                        isLoading: false
+                        isLoading: false,
+                        patient: res.data
                     })
                     
                 })
@@ -164,7 +153,9 @@ export default class MeinePatienten extends React.Component {
         })
     }
     onChangeStr(e){
-        console.log(e)
+        this.setState({
+            strasse: e.target.value
+        })
     }
     onChangePlz(e){
         
@@ -191,7 +182,6 @@ export default class MeinePatienten extends React.Component {
 
         hide.textContent = e.target.value;
         txt.style.width = hide.offsetWidth + "px";
-        console.log(txt.value)
     }
     onChangeNachname(e){
         var hide = document.getElementById('hidenach');
@@ -202,11 +192,101 @@ export default class MeinePatienten extends React.Component {
             nachname: e.target.value
         })
         txt.style.width = hide.offsetWidth + "px";
-        console.log(txt.style.width, hide.offsetWidth)
     }
     onSubmitUpdate(e){
         e.preventDefault();
-        console.log(e.target.value)
+        const active = this.state.active;
+        const address = [
+            {
+                city: this.refs.city.value.trim(),
+                country: this.refs.country.value.trim(),
+                line:[
+                    this.refs.line.value.trim()
+                ],
+                postalCode: this.refs.plz.value.trim(),
+                state: 'OK',
+                use: 'home'
+            }
+        ];
+        const birthDate = this.refs.birthdate.value.trim();
+        const gender = this.refs.gender.value.trim();
+        
+        // const generalPractitioner = [
+        //     {
+        //         reference: this.state.generalPractitioner[0].reference          //Verwenden, der Patient an das Java-Backend gesendet werden soll
+        //     }
+        // ];
+        const telecom = [
+            {
+                system: 'phone',
+                use: 'home',
+                value: this.refs.home.value.trim()
+            },
+            {
+                system: 'phone',
+                use: 'mobile',
+                value: this.refs.mobile.value.trim()
+            },
+            {
+                system: 'email',
+                value: this.refs.email.value.trim()
+            }
+        ];
+        const vorname = this.refs.vorname.value.trim();
+        const nachname = this.refs.nachname.value.trim();
+                
+        // Workaround, damit ID als Zahl dargestellt wird
+        let patient = this.state.patient;                       //Verwenden, der Patient direkt vom Fronend an den Fhir-Server gesendet werden soll
+        // let patient = {};                                   //Verwenden, der Patient an das Java-Backend gesendet werden soll
+        
+        let input = this.state.userId.split('-')
+        let ergebnis1 = '';
+        input.forEach(item => {
+            ergebnis1 = ergebnis1 + item
+        })
+        let zwischenId = ergebnis1.match(/\d+/g)
+        let newId = '';
+        zwischenId.forEach(item => {
+            newId = newId + item
+        })
+       
+        
+        patient.active = active;
+        patient.address = address;               //Verwenden, der Patient direkt vom Fronend an den Fhir-Server gesendet werden soll
+        patient.birthDate = birthDate;
+        patient.gender = gender;
+        patient.name[0].family = nachname;       //Verwenden, der Patient direkt vom Fronend an den Fhir-Server gesendet werden soll
+        patient.name[0].given[0] = vorname;      //Verwenden, der Patient direkt vom Fronend an den Fhir-Server gesendet werden soll
+        // patient.nachname = nachname;                //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.vorname = vorname;                  //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.postalCode = address[0].postalCode; //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.line = address[0].line[0];      //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.city = address[0].city;         //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.country = address[0].country;   //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.name[0].family = nachname;
+        // patient.name[0].given[0] = vorname; 
+        patient.telecom = telecom;              //Verwenden, der Patient direkt vom Fronend an den Fhir-Server gesendet werden soll
+        
+        // patient.home = telecom[0].value;        //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.mobile = telecom[1].value;      //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.email = telecom[2].value;       //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+
+        // patient.fhirId = this.state.userId; //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        // patient.id = newId                  //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+       
+        axios.put('http://141.37.123.37:8080/baseDstu3/Patient/'+this.state.userId, patient)    //Verwenden, der Patient direkt vom Fronend an den Fhir-Server gesendet werden soll
+        // axios.post('http://localhost:8080/patient2/api/update', patient)                 //Verwenden, wenn das PatientenObjekt an das Java-Backend gesendet werden soll
+        .then(res => {
+            
+            this.setState({
+                message: `${res.status}: ${res.statusText}. Patient erfolgreich angelegt. ${res.data.issue[0].diagnostics}`
+            })
+        })
+        .catch(err => {
+            this.setState({
+                error: `${err}. Die Daten konnten nicht erfolgreich gespeichert werden. Bitte überprüfen Sie die Endpunkte und die übergebenen Daten.`
+            })
+        })
     }
 
     render(){
@@ -217,7 +297,7 @@ export default class MeinePatienten extends React.Component {
 		  return  <Spinner name='ball-grid-pulse' className="spinner" color="#00CED1" />;
 		}
         return <div key={this.state.userId} className="container">
-
+                
             <div className="row mb-4">
                 <div className="col-md-12">
                     <form className="mb-4" onSubmit={this.onSubmitUpdate.bind(this)}>
@@ -225,17 +305,19 @@ export default class MeinePatienten extends React.Component {
                             <span id="hide"></span><input size="4" id="txt" type="text" maxLength="150" ref="vorname" value={this.state.vorname} onChange={this.onChangeVorname.bind(this)}/>
                             <span id="hidenach"></span><input size="4" id="txtnach" maxLength="150" type="text" ref="nachname" value={this.state.nachname} onChange={this.onChangeNachname.bind(this)}/> {this.state.active ? <span className="badge badge-pill badge-success">aktiv</span> : <span className="badge badge-pill badge-danger">inaktiv</span>}
                         </h2>
+                        {this.state.message ? <div className="alert alert-success">{this.state.message}</div> : undefined}
+                        {this.state.error ? <div className="alert alert-danger">{this.state.error}</div> : undefined}
                         <div className="card mb-4 bg-light">
                             <div className="card-body">            
                                 <h5 className="card-title">Stammdaten</h5>
                                 <div className="row mb-4">
                                     <div className="form-group col-md-6">
                                         <label><h6 className="card-subtitle mb-2 text-muted mr-4">Geburtsdatum</h6></label>
-                                        <input className="form-control" type="date" value={this.state.birthDate} onChange={this.onChangeBirth.bind(this)} placeholder="Geburtsdatum eingeben" required/>
+                                        <input className="form-control" type="date" ref="birthdate" value={this.state.birthDate} onChange={this.onChangeBirth.bind(this)} placeholder="Geburtsdatum eingeben" required/>
                                     </div>
                                     <div className="form-group col-md-6">
                                         <label><h6 className="card-subtitle mb-2 text-muted mr-4">Geschlecht</h6></label>
-                                        <input className="form-control" type="text" value={this.state.gender} onChange={this.onChangeGender.bind(this)} placeholder="Geburtsdatum eingeben" required/>
+                                        <input className="form-control" type="text" ref="gender" value={this.state.gender} onChange={this.onChangeGender.bind(this)} placeholder="Geburtsdatum eingeben" required/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -244,15 +326,15 @@ export default class MeinePatienten extends React.Component {
                                         <div className="row">
                                             <div className="col-md-3">
                                                 <label>Festnetz</label>
-                                                <input className="form-control" type="tel" value={this.state.festnetz} onChange={this.onChangeFestnetz.bind(this)} placeholder="Nummer eingeben" />
+                                                <input className="form-control" type="tel" ref="home" value={this.state.festnetz} onChange={this.onChangeFestnetz.bind(this)} placeholder="Nummer eingeben" />
                                             </div>
                                             <div className="col-md-3">
                                                 <label>Handy</label>
-                                                <input className="form-control" type="tel" value={this.state.telefon.value} onChange={this.onChangeTelefon.bind(this)} placeholder="Nummer eingeben" />
+                                                <input className="form-control" type="tel" ref="mobile" value={this.state.telefon.value} onChange={this.onChangeTelefon.bind(this)} placeholder="Nummer eingeben" />
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="text-muted">Email</label>
-                                                <input className="form-control" type="email" value={this.state.email.value} onChange={this.onChangeEmail.bind(this)} placeholder="Email eingeben"/>
+                                                <input className="form-control" type="email" ref="email" value={this.state.email.value} onChange={this.onChangeEmail.bind(this)} placeholder="Email eingeben"/>
                                             </div>
                                         </div>
                                     </div>
@@ -267,25 +349,25 @@ export default class MeinePatienten extends React.Component {
                                 <h5 className="card-title">Adresse</h5>
                                 <div className="form-group">
                                     <label><h6 className="card-subtitle mb-2 text-muted">Straße, Nr.</h6></label>
-                                    <input maxLength="150" className="form-control" type="text" value={this.state.strasse} onChange={this.onChangeStr.bind(this)} placeholder="Straße und Hausnummer eingeben" required/>
+                                    <input maxLength="150" className="form-control" type="text" ref="line" value={this.state.strasse} onChange={this.onChangeStr.bind(this)} placeholder="Straße und Hausnummer eingeben" required/>
                                 </div>
                                 <div className="row mt-4">
                                     <div className="col-md-2">
                                         <div className="form-group">
                                             <label><h6 className="card-subtitle mb-2 text-muted">PLZ</h6></label>
-                                            <input className="form-control" type="number" pattern="[0-9]{5}" ref="plz" value={this.state.plz} onChange={this.onChangePlz.bind(this)} placeholder="Postleitzahl eingeben" required/>
+                                            <input className="form-control" type="number" ref="plz" pattern="[0-9]{5}" value={this.state.plz} onChange={this.onChangePlz.bind(this)} placeholder="Postleitzahl eingeben" required/>
                                         </div>
                                     </div>
                                     <div className="col-md-5">
                                         <div className="formgroup">
                                             <label><h6 className="card-subtitle mb-2 text-muted">Stadt</h6></label>
-                                            <input className="form-control" type="text" value={this.state.stadt} onChange={this.onChangeStadt.bind(this)} placeholder="Stadt eingeben" required/>
+                                            <input className="form-control" type="text" ref="city" value={this.state.stadt} onChange={this.onChangeStadt.bind(this)} placeholder="Stadt eingeben" />
                                         </div>
                                     </div>
                                     <div className="col-md-5">
                                         <div className="form-group">
                                             <label><h6 className="card-subtitle mb-2 text-muted">Land</h6></label>
-                                            <input className="form-control" type="text" value={this.state.land} onChange={this.onChangeLand.bind(this)} placeholder="Land eingeben" required/>
+                                            <input className="form-control" type="text" ref="country" value={this.state.land} onChange={this.onChangeLand.bind(this)} placeholder="Land eingeben" />
                                         </div>
                                     </div>
                                 </div>

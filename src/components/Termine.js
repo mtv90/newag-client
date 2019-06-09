@@ -1,6 +1,6 @@
 import React from 'react';
 import Kalender from './Kalender';
-import Patientenliste from './Patientenliste';
+// import Patientenliste from './Patientenliste';
 import Terminliste from './Terminliste';
 
 

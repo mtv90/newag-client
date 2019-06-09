@@ -88,13 +88,15 @@ export default class MeinePatienten extends React.Component {
 		e.preventDefault();
 		const item = this.refs.suchbegriff.value.trim();
 		const date = this.refs.geburtsdatum.value.trim();
-		console.log(date)
+		
+		let suche = item.split(' ')
+
 		var client = mkFhir({
 			baseUrl: 'http://141.37.123.37:8080/baseDstu3/'
 			});
 		this.setState({isLoading: true});
 	
-		client.search({type: 'Patient', query: { 'birthdate': date }})
+		client.search({type: 'Patient', query: { 'birthdate': date, 'name': {$and: suche} }})
 			.then(res => {
 				
 				this.setState({
@@ -121,7 +123,7 @@ export default class MeinePatienten extends React.Component {
 				<form className="form-horizontal" onSubmit={this.onSubmitSearch.bind(this)}>
             		<div className="form-group row">
               {/* <div className=" mx-auto"> */}
-						<input className="form-control col-md-5 mr-1 ml-4" type="text" ref="suchbegriff" placeholder="Bitte Namen des Patienten eingeben"/>
+						<input className="form-control col-md-5 mr-1 ml-4" type="text" ref="suchbegriff" placeholder="Namen des Patienten eingeben"/>
 						<input className="form-control col-md-5 mr-1" type="date" ref="geburtsdatum" placeholder="..oder Geburtsdatum eingeben"/>
 						<button type="submit" className="btn btn-primary">suchen</button>
               {/* </div> */}
@@ -130,7 +132,7 @@ export default class MeinePatienten extends React.Component {
 				<br/>
 			</div>
 			<div className="row">
-				{this.state.patients ? this.state.patients.map(patient => <div className="col-md-12 pt-4 pb-4 alert alert-info" key={patient.resource.id}><Link className="text-decoration-none text-dark" to={{pathname:`/meinepatienten/${patient.resource.id}`, state: {userId: patient.resource.id}}}><p className="display-4">{patient.resource.name[0].family}, {patient.resource.name[0].given[0]}</p> Geburtsdatum: {moment(patient.resource.birthDate).format('DD.MM.YYYY')}</Link></div>) : <div className="col-md-12 pt-4 pb-4 alert alert-warning"><strong>Keine passenden Patienten gefunden!</strong></div>}
+				{this.state.patients ? this.state.patients.map(patient => <div className="col-md-12 pt-4 pb-4 alert alert-info" key={patient.resource.id}><Link className="text-decoration-none text-dark" to={{pathname:`/meinepatienten/${patient.resource.id}`, state: {userId: patient.resource.id}}}><p className="display-4">{patient.resource.id} | {patient.resource.name[0].family}, {patient.resource.name[0].given[0]}</p> Geburtsdatum: {moment(patient.resource.birthDate).format('DD.MM.YYYY')}</Link></div>) : <div className="col-md-12 pt-4 pb-4 alert alert-warning"><strong>Keine passenden Patienten gefunden!</strong></div>}
 				<nav className="pagination mb-4 pb-4 mx-auto">
 					<div className="page-item">
 						{this.state.prevPage ? <button className="page-link" value={this.state.prevPage} onClick={this.prev}>previous</button> : <button className="page-link" disabled>previous</button>}
