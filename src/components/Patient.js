@@ -27,8 +27,11 @@ export default class MeinePatienten extends React.Component {
 
             patient:{},
             message:'',
-            error:''
+            error:'',
+            edit: false
         }
+        
+        
     }
     componentDidMount(){
 
@@ -279,16 +282,117 @@ export default class MeinePatienten extends React.Component {
         .then(res => {
             
             this.setState({
-                message: `${res.status}: ${res.statusText}. Patient erfolgreich angelegt. ${res.data.issue[0].diagnostics}`
+                message: `${res.status}: ${res.statusText}. Patient erfolgreich angelegt. ${res.data.issue[0].diagnostics}`,
+                edit: false
             })
         })
         .catch(err => {
             this.setState({
-                error: `${err}. Die Daten konnten nicht erfolgreich gespeichert werden. Bitte überprüfen Sie die Endpunkte und die übergebenen Daten.`
+                error: `${err}. Die Daten konnten nicht erfolgreich gespeichert werden. Bitte überprüfen Sie die Endpunkte und die übergebenen Daten.`,
+                edit: false
             })
         })
     }
-
+    startEdit(e){
+        e.preventDefault();
+                       
+        this.setState({
+            edit: true
+        })   
+    }
+    cancelEdit(e){
+        e.preventDefault();
+        
+        if(this.state.userId){
+            
+            this.setState({isLoading: true});
+            axios.get('http://141.37.123.37:8080/baseDstu3/Patient/'+this.state.userId)
+                .then(res => {
+                    
+                    let phone = '';
+                    let mail = '';
+                    let home = '';
+                    
+                    if(res.data.telecom.length === 1){
+                        if(res.data.telecom[0].system === 'phone' && res.data.telecom[0].use === 'home') {
+                            home = res.data.telecom[0].value
+                        }
+                        if(res.data.telecom[0].system === 'phone' && res.data.telecom[0].use === 'mobile'){
+                            phone = res.data.telecom[0].value
+                        }
+                        if(res.data.telecom[0].system === 'email'){
+                            mail = res.data.telecom[0].value
+                        }
+                        
+                    }
+                    if(res.data.telecom.length === 2){
+                        if(res.data.telecom[0].system === 'phone' && res.data.telecom[0].use === 'home') {
+                            home = res.data.telecom[0].value
+                        }
+                        if(res.data.telecom[0].system === 'phone' && res.data.telecom[0].use === 'mobile') {
+                            phone = res.data.telecom[0].value
+                        }
+                        if(res.data.telecom[1].system === 'phone' && res.data.telecom[1].use === 'mobile') {
+                            phone = res.data.telecom[1].value
+                        }
+                        if(res.data.telecom[1].system === 'email') {
+                            mail = res.data.telecom[1].value
+                        }
+                    }
+                    if(res.data.telecom.length === 3){
+                        if(res.data.telecom[0].system === 'phone' && res.data.telecom[0].use === 'home') {
+                            home = res.data.telecom[0].value
+                        }
+                        if(res.data.telecom[1].system === 'phone' && res.data.telecom[1].use === 'mobile') {
+                            phone = res.data.telecom[1].value
+                        }
+                        if(res.data.telecom[2].system === 'email') {
+                            mail = res.data.telecom[2].value
+                        }
+                    }
+                    
+                    this.setState({
+                        active: res.data.active,
+                        strasse: res.data.address[0].line[0],
+                        plz: res.data.address[0].postalCode,
+                        stadt: res.data.address[0].city,
+                        land: res.data.address[0].country,
+                        birthDate: res.data.birthDate,
+                        gender: res.data.gender,
+                        nachname: res.data.name[0].family,
+                        vorname: res.data.name[0].given[0],
+                        telefon: {value: phone},
+                        festnetz: home,
+                        email:{value: mail},
+                        generalPractitioner: res.data.generalPractitioner,
+                        isLoading: false,
+                        patient: res.data
+                    })
+                    
+                })
+                .then(() => {
+                    if(this.state.generalPractitioner){
+                        return axios.get('http://141.37.123.37:8080/baseDstu3/'+this.state.generalPractitioner[0].reference);
+                    }
+                })
+                .then(res => {
+                    if(res){
+                        this.setState({
+                            practitioner:{
+                                vorname: res.data.name[0].given[0],
+                                nachname: res.data.name[0].family,
+                                suffix: res.data.name[0].suffix[0],
+                            },
+                            isLoading: false
+                        })
+                    }
+                })
+                .catch(err => console.log(err))
+            }
+        this.setState({
+            edit: false
+        })
+    }
     render(){
         var Spinner = require('react-spinkit');
 		const {isLoading} = this.state;
@@ -300,10 +404,15 @@ export default class MeinePatienten extends React.Component {
                 
             <div className="row mb-4">
                 <div className="col-md-12">
-                    <form className="mb-4" onSubmit={this.onSubmitUpdate.bind(this)}>
+                    {
+                        this.state.edit ? <button type="button" className=" mt-4 btn btn-sm btn-info float-right" onClick={this.cancelEdit.bind(this)}><span className="fas fa-times"></span> abbrechen</button> :
+                        <button type="button" className=" mt-4 btn btn-sm btn-info float-right" onClick={this.startEdit.bind(this)}><span className="fas fa-cog"></span> bearbeiten</button>
+                    }
+                    
+                    <form className="mb-4" onSubmit={this.onSubmitUpdate.bind(this)} disabled>
                         <h2 className="mt-4 mb-4 pt-4 pb-4 text-center">
-                            <span id="hide"></span><input size="4" id="txt" type="text" maxLength="150" ref="vorname" value={this.state.vorname} onChange={this.onChangeVorname.bind(this)}/>
-                            <span id="hidenach"></span><input size="4" id="txtnach" maxLength="150" type="text" ref="nachname" value={this.state.nachname} onChange={this.onChangeNachname.bind(this)}/> {this.state.active ? <span className="badge badge-pill badge-success">aktiv</span> : <span className="badge badge-pill badge-danger">inaktiv</span>}
+                            <span id="hide"></span><input disabled = {this.state.edit ? "" : "disabled"} size="5" id="txt" type="text" maxLength="150" ref="vorname" value={this.state.vorname} onChange={this.onChangeVorname.bind(this)}/>
+                            <span id="hidenach"></span><input disabled = {this.state.edit ? "" : "disabled"} size="5" id="txtnach" maxLength="150" type="text" ref="nachname" value={this.state.nachname} onChange={this.onChangeNachname.bind(this)}/> {this.state.active ? <span className="badge badge-pill badge-success">aktiv</span> : <span className="badge badge-pill badge-danger">inaktiv</span>}
                         </h2>
                         {this.state.message ? <div className="alert alert-success">{this.state.message}</div> : undefined}
                         {this.state.error ? <div className="alert alert-danger">{this.state.error}</div> : undefined}
@@ -313,11 +422,11 @@ export default class MeinePatienten extends React.Component {
                                 <div className="row mb-4">
                                     <div className="form-group col-md-6">
                                         <label><h6 className="card-subtitle mb-2 text-muted mr-4">Geburtsdatum</h6></label>
-                                        <input className="form-control" type="date" ref="birthdate" value={this.state.birthDate} onChange={this.onChangeBirth.bind(this)} placeholder="Geburtsdatum eingeben" required/>
+                                        <input disabled = {this.state.edit ? "" : "disabled"} className="form-control" type="date" ref="birthdate" value={this.state.birthDate} onChange={this.onChangeBirth.bind(this)} placeholder="Geburtsdatum eingeben" required/>
                                     </div>
                                     <div className="form-group col-md-6">
                                         <label><h6 className="card-subtitle mb-2 text-muted mr-4">Geschlecht</h6></label>
-                                        <input className="form-control" type="text" ref="gender" value={this.state.gender} onChange={this.onChangeGender.bind(this)} placeholder="Geburtsdatum eingeben" required/>
+                                        <input disabled = {this.state.edit ? "" : "disabled"} className="form-control" type="text" ref="gender" value={this.state.gender} onChange={this.onChangeGender.bind(this)} placeholder="Geburtsdatum eingeben" required/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -326,15 +435,15 @@ export default class MeinePatienten extends React.Component {
                                         <div className="row">
                                             <div className="col-md-3">
                                                 <label>Festnetz</label>
-                                                <input className="form-control" type="tel" ref="home" value={this.state.festnetz} onChange={this.onChangeFestnetz.bind(this)} placeholder="Nummer eingeben" />
+                                                <input disabled = {this.state.edit ? "" : "disabled"} className="form-control" type="tel" ref="home" value={this.state.festnetz} onChange={this.onChangeFestnetz.bind(this)} placeholder="Nummer eingeben" />
                                             </div>
                                             <div className="col-md-3">
                                                 <label>Handy</label>
-                                                <input className="form-control" type="tel" ref="mobile" value={this.state.telefon.value} onChange={this.onChangeTelefon.bind(this)} placeholder="Nummer eingeben" />
+                                                <input disabled = {this.state.edit ? "" : "disabled"} className="form-control" type="tel" ref="mobile" value={this.state.telefon.value} onChange={this.onChangeTelefon.bind(this)} placeholder="Nummer eingeben" />
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="text-muted">Email</label>
-                                                <input className="form-control" type="email" ref="email" value={this.state.email.value} onChange={this.onChangeEmail.bind(this)} placeholder="Email eingeben"/>
+                                                <input disabled = {this.state.edit ? "" : "disabled"} className="form-control" type="email" ref="email" value={this.state.email.value} onChange={this.onChangeEmail.bind(this)} placeholder="Email eingeben"/>
                                             </div>
                                         </div>
                                     </div>
@@ -349,25 +458,25 @@ export default class MeinePatienten extends React.Component {
                                 <h5 className="card-title">Adresse</h5>
                                 <div className="form-group">
                                     <label><h6 className="card-subtitle mb-2 text-muted">Straße, Nr.</h6></label>
-                                    <input maxLength="150" className="form-control" type="text" ref="line" value={this.state.strasse} onChange={this.onChangeStr.bind(this)} placeholder="Straße und Hausnummer eingeben" required/>
+                                    <input disabled = {this.state.edit ? "" : "disabled"} maxLength="150" className="form-control" type="text" ref="line" value={this.state.strasse} onChange={this.onChangeStr.bind(this)} placeholder="Straße und Hausnummer eingeben" required/>
                                 </div>
                                 <div className="row mt-4">
                                     <div className="col-md-2">
                                         <div className="form-group">
                                             <label><h6 className="card-subtitle mb-2 text-muted">PLZ</h6></label>
-                                            <input className="form-control" type="number" ref="plz" pattern="[0-9]{5}" value={this.state.plz} onChange={this.onChangePlz.bind(this)} placeholder="Postleitzahl eingeben" required/>
+                                            <input disabled = {this.state.edit ? "" : "disabled"} className="form-control" type="number" ref="plz" pattern="[0-9]{5}" value={this.state.plz} onChange={this.onChangePlz.bind(this)} placeholder="Postleitzahl eingeben" required/>
                                         </div>
                                     </div>
                                     <div className="col-md-5">
                                         <div className="formgroup">
                                             <label><h6 className="card-subtitle mb-2 text-muted">Stadt</h6></label>
-                                            <input className="form-control" type="text" ref="city" value={this.state.stadt} onChange={this.onChangeStadt.bind(this)} placeholder="Stadt eingeben" />
+                                            <input disabled = {this.state.edit ? "" : "disabled"} className="form-control" type="text" ref="city" value={this.state.stadt} onChange={this.onChangeStadt.bind(this)} placeholder="Stadt eingeben" />
                                         </div>
                                     </div>
                                     <div className="col-md-5">
                                         <div className="form-group">
                                             <label><h6 className="card-subtitle mb-2 text-muted">Land</h6></label>
-                                            <input className="form-control" type="text" ref="country" value={this.state.land} onChange={this.onChangeLand.bind(this)} placeholder="Land eingeben" />
+                                            <input disabled = {this.state.edit ? "" : "disabled"} className="form-control" type="text" ref="country" value={this.state.land} onChange={this.onChangeLand.bind(this)} placeholder="Land eingeben" />
                                         </div>
                                     </div>
                                 </div>
@@ -387,7 +496,7 @@ export default class MeinePatienten extends React.Component {
                         </div>
                         <div className="row mt-4">
                             <div className="col-md-12">
-                                <button type="submit" className="btn btn-primary">speichern</button>
+                                {this.state.edit ? <button disabled = {this.state.edit ? "" : "disabled"} type="submit" className="btn btn-info"><span className="fas fa-check"></span> speichern</button> : undefined}
                             </div>
                         </div>
                     </form>    
