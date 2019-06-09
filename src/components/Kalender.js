@@ -60,7 +60,8 @@ export default class Kalender extends React.Component {
       }
         return (
             <div>
-              <button className="btn btn-sm bg-secondary text-light" onClick={ this.toggleWeekends }>toggle weekends</button>
+              {/* Button um Wochenende anzuzeigen */}
+              {/* <button className="btn btn-sm bg-secondary text-light" onClick={ this.toggleWeekends }>toggle weekends</button> */}
               <button type="button" className="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#terminModalKalender">
                 <span className="fas fa-plus"></span> Termin
               </button>
@@ -69,6 +70,8 @@ export default class Kalender extends React.Component {
               </div>
               <FullCalendar 
                 defaultView="timeGridWeek"
+                minTime= '08:00:00'
+                maxTime= '16:00:00'
                 header={{
                   left: 'prev,next today',
                   center: 'title',
@@ -120,11 +123,12 @@ export default class Kalender extends React.Component {
             </div>
         );
     }
-    toggleWeekends = () => {
-        this.setState({ // update a property
-          calendarWeekends: !this.state.calendarWeekends
-        })
-    }
+    //Toggle Funktion um Wochenende anzuzeigen
+    // toggleWeekends = () => {
+    //     this.setState({ // update a property
+    //       calendarWeekends: !this.state.calendarWeekends
+    //     })
+    // }
 
     handleDateClick = (arg) => {
 

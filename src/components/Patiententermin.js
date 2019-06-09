@@ -1,4 +1,6 @@
 import React from 'react';
+import Kalender from './Kalender';
+import Terminliste from './Terminliste';
 
 export default class Patiententermin extends React.Component{
     constructor(props){
@@ -11,13 +13,15 @@ export default class Patiententermin extends React.Component{
     render() {
         return (
             <div className="container-fluid">
-                <h2>Hier entsteht die Patientenansicht!!!</h2>
+               <center><h2>Hier entsteht die Patientenansicht!!!</h2></center>
                 <div className="row">
                     <div className="col-md-10 kalender">
-                        <p>Kalender-Grid hier</p>
+                        {/* Eigener Kalender erstellen? */}
+                    <Kalender/> 
                     </div>
                     <div className="col-md-2">
-                        <p>Terminliste hier</p>
+                        {/* Eigene Terminliste/ Offene Termine anzeigen? */}
+                    <Terminliste/>
                     </div>
                 </div>
             </div>
